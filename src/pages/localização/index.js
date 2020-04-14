@@ -60,6 +60,7 @@ export default function Maps(){
 
             <Callout onPress= {() =>{}}>
             <View style={{width: 100, height:50, backgroundColor: "white"}}>
+                <Text>{coords.tag}</Text>
                 <Text>{coords.lat}</Text>
                 <Text>{coords.lon}</Text>
             </View>
