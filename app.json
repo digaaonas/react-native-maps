@@ -26,11 +26,9 @@
     },
     "android": {
       "config": {
-        "googleMaps": {
-          "apiKey": ""
-        }
+        "googleMaps": {"apiKey": "" }
         },        
-      "package": "com.DevHobby.foodfy",
+      "package": "com.DevHobby.searchend",
       "versionCode": 1        
     }         
   }

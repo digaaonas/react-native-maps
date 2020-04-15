@@ -11,8 +11,8 @@ import styles from './style.js'
 
 import { GOOGLE_MAPS_APIKEY } from 'react-native-dotenv'
 
-
 export default function Maps(){
+
     const route = useRoute()
 
     const { coords } = route.params
