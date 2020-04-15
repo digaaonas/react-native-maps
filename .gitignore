@@ -11,7 +11,7 @@ web-build/
 web-report/
 .env
 app.json
-package-lock-json
+package-lock.json
 
 # macOS
 .DS_Store
