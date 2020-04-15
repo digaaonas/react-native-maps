@@ -13,7 +13,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#262626"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -27,10 +27,11 @@
     "android": {
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDRbI2ml7MBG5rX_V_JLHAHGiJsa2BwNsY"
+          "apiKey": ""
         }
-        }
-      }
-         
+        },        
+      "package": "com.DevHobby.foodfy",
+      "versionCode": 1        
+    }         
   }
 }

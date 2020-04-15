@@ -10,12 +10,18 @@ container: {
         
 },
 mapStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
 },
 textLoad:{
     color: "black",
     fontSize: 20,
     fontStyle: "italic"
+},
+
+CalloutTitle:{
+    fontWeight: 'bold',
+    textAlign: "center",
+    marginBottom: 20
 }
 })

@@ -16,7 +16,7 @@ menu:{
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: '#262626',
-    height: Constants.statusBarHeight + 120,
+    height: Constants.statusBarHeight + 90,
     marginBottom: 10
 },
 
@@ -24,7 +24,7 @@ menuText:{
     color: "#FF9900",
     fontSize: 20,
     fontWeight: "bold",
-    marginTop: Constants.statusBarHeight + 30
+    marginVertical: 10
 },
 
 contentSearch:{
@@ -32,7 +32,7 @@ contentSearch:{
     justifyContent: 'space-between',
     alignItems: "center",
     marginHorizontal: 30,
-    marginVertical: 20
+    marginTop: 10
 },
 
 input:{
@@ -53,16 +53,36 @@ inputPlus:{
     backgroundColor: "rgba(0, 0, 0, 0.6)"
 },
 
-modalPlusOn:{
-    display: "flex",
+modalLoad:{
+    position: "absolute",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    top: Constants.statusBarHeight + 90,
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
+    backgroundColor: "rgba(0, 0, 0, 0.3)"
+    
+},
+
+modalLoadCircle:{
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    borderBottomWidth: 3,
+    borderBottomColor: '#FF9900',
+    borderRightWidth: 3,
+    borderRightColor: '#FF9900',
+    marginTop: 30 
+},
+
+modalPlus:{
+    position: "absolute",
+    top: Constants.statusBarHeight + 100,
     padding: 10,
     marginHorizontal: 30,
     borderRadius: 8,
-    backgroundColor: "#262626"    
-},
-
-modalPlusOf:{
-    display: "none"
+    backgroundColor: "#262626"
 },
 
 modalButtons:{

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../services/api'
-import { View, Text, Image, FlatList, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, Image, FlatList, TouchableOpacity, TextInput, Animated, Dimensions } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import * as Location from  'expo-location'
@@ -22,15 +22,25 @@ export default function Home(){
 
     const [ search, setSearch ] = useState('')
 
-    const [ plusModal, setPlusModal ] = useState('')
+    const [ messageLoad, setMessageLoad ] = useState('')
 
     const [ inputLatitude, setInputLatitude ] = useState('')
     const [ inputLongitude, setInputLongitude ] = useState('')
 
+    const [ animantedModal, setAnimatedModal] = useState({
+        ModalLoadOpacity: new Animated.Value(0),
+        ModalLoadRotate: new Animated.Value(0),
+        ModalOpacity: new Animated.Value(0),
+        ModalZindex: new Animated.Value(0),
+        ModalWidth: new Animated.Value(0),
+        ButtonsOpacity: new Animated.Value(0),
+        ListOpacity: new Animated.Value(1),
+        ListZindex: new Animated.Value(5),
+    })
+
     const navigation = useNavigation()
 
     useEffect(() => {
-        console.log(search)
         api.get('ativos',{
             params:{
                 search
@@ -50,18 +60,31 @@ export default function Home(){
             longitude,
             infoadd
         }
-        
+
+        setMessageLoad('Cadastrando novo ativo')
+
+        Animated.sequence([
+            Animated.timing(animantedModal.ModalLoadOpacity, { toValue: 1, duration: 600 })            
+        ]).start()
+
             try{
 
                 await api.post('ativos', data)
 
-                setTag(null)
+                setTag('')
                 setDescription('')
                 setInfoadd('')
 
-                setPlusModal('')
+                Animated.sequence([
+                    Animated.timing(animantedModal.ModalLoadOpacity, { toValue: 0, duration: 600 })            
+                ]).start()
+
+                closeModal()
 
             }catch(err){
+                Animated.sequence([
+                    Animated.timing(animantedModal.ModalLoadOpacity, { toValue: 0, duration: 600 })            
+                ]).start()
 
                 console.log(err)
             }
@@ -72,6 +95,16 @@ export default function Home(){
     }
 
     async function newAtivoGeoLoc(){
+        
+        setMessageLoad('Carregando coordenadas')
+
+        Animated.sequence([
+            Animated.timing(animantedModal.ListOpacity, { toValue: 0, duration: 300 }),
+            Animated.timing(animantedModal.ListZindex, { toValue: 0, duration: 50 }),
+            Animated.timing(animantedModal.ModalLoadOpacity, { toValue: 1, duration: 300 }),            
+            Animated.timing(animantedModal.ModalLoadRotate, { toValue: 360, duration: 3000 }),            
+        ]).start()
+
         const { coords } = await Location.getCurrentPositionAsync({})
         
         const { latitude, longitude } = coords
@@ -82,7 +115,25 @@ export default function Home(){
         setLatitude(latitude)
         setLongitude(longitude)
 
-        setPlusModal("on")
+        Animated.sequence([
+            Animated.timing(animantedModal.ModalLoadRotate, { toValue: 0, duration: 1000 }),            
+            Animated.timing(animantedModal.ModalLoadOpacity, { toValue: 0, duration: 300 }),
+            Animated.timing(animantedModal.ModalZindex, { toValue: 5, duration: 50 }),
+            Animated.timing(animantedModal.ModalOpacity, { toValue: 1, duration: 300 }),
+            Animated.timing(animantedModal.ModalWidth, { toValue: Dimensions.get('screen').width - 60, duration: 300 }),
+            Animated.timing(animantedModal.ButtonsOpacity, { toValue: 1, duration: 300 })
+        ]).start()
+    }
+
+    function closeModal(){
+        Animated.sequence([
+            Animated.timing(animantedModal.ButtonsOpacity, { toValue: 0, duration: 300 }),
+            Animated.timing(animantedModal.ModalWidth, { toValue: 0, duration: 300 }),
+            Animated.timing(animantedModal.ModalOpacity, { toValue: 0, duration: 300 }),
+            Animated.timing(animantedModal.ModalZindex, { toValue: 0, duration: 50 }),
+            Animated.timing(animantedModal.ListZindex, { toValue: 5, duration: 50 }),
+            Animated.timing(animantedModal.ListOpacity, { toValue: 1, duration: 300 })
+        ]).start()
     }
 
     return(
@@ -97,20 +148,41 @@ export default function Home(){
                 </View>
             </View>
 
-            <View style={plusModal ? styles.modalPlusOn : styles.modalPlusOf}>
+            <Animated.View style={[styles.modalLoad,{
+                opacity: animantedModal.ModalLoadOpacity
+            }]}>
+                <Text style={{color: '#FFF'}}>{messageLoad}</Text>
+                <Animated.View style={[styles.modalLoadCircle, {                    
+                    transform:[{
+                        rotate: animantedModal.ModalLoadRotate
+                    }]
+                }]}/>
+            </Animated.View>
+
+            <Animated.View style={[styles.modalPlus,{
+                opacity: animantedModal.ModalOpacity,
+                width: animantedModal.ModalWidth,
+                zIndex: animantedModal.ModalZindex
+            }]}>
                 <TextInput style={styles.inputModal} placeholder="TAG" onChangeText={text => setTag(text)}>{tag}</TextInput>
                 <TextInput style={styles.inputModal} placeholder="Descrição" onChangeText={text => setDescription(text)}>{description}</TextInput>
                 <Text style={styles.inputModal} placeholder="Latitude">Latitude: {inputLatitude}</Text>
                 <Text style={styles.inputModal} placeholder="Longitude">Longitude: {inputLongitude}</Text>
                 <TextInput style={styles.inputModal} placeholder="Informações adicionais" onChangeText={text => setInfoadd(text)}>{infoadd}</TextInput>
-                <View style={styles.modalButtons}>
-                    <TouchableOpacity style={styles.buttonModal} onPress={() => setPlusModal('')}><Feather name="x" size={22} color="#FF9900"/></TouchableOpacity>
+                <Animated.View style={[styles.modalButtons,{
+                    opacity: animantedModal.ButtonsOpacity
+                }]}>
+                    <TouchableOpacity style={styles.buttonModal} onPress={closeModal}><Feather name="x" size={22} color="#FF9900"/></TouchableOpacity>
                     <TouchableOpacity style={styles.buttonModal} onPress={newAtivo}><Feather name="upload" size={22} color="#FF9900"/></TouchableOpacity>
-                </View>                
-            </View>
+                </Animated.View>                
+            </Animated.View>
 
-            <FlatList
-            style={{marginBottom: 200}}
+            <Animated.FlatList
+            style={{
+                marginBottom: 150,
+                opacity: animantedModal.ListOpacity,
+                zIndex: animantedModal.ListZindex
+            }}
             data={ativos}
             keyExtractor={ativos.id}
             renderItem={ ({item: ativos}) => (
